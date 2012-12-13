@@ -1,6 +1,0 @@
-\\psf\home\documents\visual studio 2010\Projects\PayatAPI\PayatAPI\bin\Debug\PayatAPI.dll
-\\psf\home\documents\visual studio 2010\Projects\PayatAPI\PayatAPI\bin\Debug\PayatAPI.pdb
-\\psf\home\documents\visual studio 2010\Projects\PayatAPI\PayatAPI\bin\Debug\System.Net.Json.dll
-\\psf\home\documents\visual studio 2010\Projects\PayatAPI\PayatAPI\obj\Debug\ResolveAssemblyReference.cache
-\\psf\home\documents\visual studio 2010\Projects\PayatAPI\PayatAPI\obj\Debug\PayatAPI.dll
-\\psf\home\documents\visual studio 2010\Projects\PayatAPI\PayatAPI\obj\Debug\PayatAPI.pdb
