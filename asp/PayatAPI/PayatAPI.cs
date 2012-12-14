@@ -9,21 +9,23 @@ using System.Collections;
 using System.Net;
 using System.IO;
 
+public class UploadFile
+{
+    public UploadFile()
+    {
+        ContentType = "application/octet-stream";
+    }
+    public string Name { get; set; }
+    public string Filename { get; set; }
+    public string ContentType { get; set; }
+    public Stream Stream { get; set; }
+}
+
 public partial class PayatAPI
 {
 	
 	
-	public class UploadFile
-    {
-        public UploadFile()
-        {
-            ContentType = "application/octet-stream";
-        }
-        public string Name { get; set; }
-        public string Filename { get; set; }
-        public string ContentType { get; set; }
-        public Stream Stream { get; set; }
-    }
+	
     
     private string client_id;
     private string client_secret;
@@ -265,8 +267,8 @@ public partial class PayatAPI
         }
 
 		using (var response = request.GetResponse())
-        using (var responseStream = response.GetResponseStream())
-        using (var stream = new MemoryStream())
+		using (var responseStream = response.GetResponseStream())
+		using (var stream = new MemoryStream())
         {
             responseStream.CopyTo(stream);
             streamBytes = stream.ToArray();
