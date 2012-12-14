@@ -5,12 +5,26 @@ using System.Linq;
 using System.Web;
 using System.Net.Json;
 using System.Collections.Specialized;
+using System.Collections;
 using System.Net;
 using System.IO;
 
 public partial class PayatAPI
 {
-
+	
+	
+	public class UploadFile
+    {
+        public UploadFile()
+        {
+            ContentType = "application/octet-stream";
+        }
+        public string Name { get; set; }
+        public string Filename { get; set; }
+        public string ContentType { get; set; }
+        public Stream Stream { get; set; }
+    }
+    
     private string client_id;
     private string client_secret;
 
@@ -188,32 +202,78 @@ public partial class PayatAPI
     //post connetction
     private string Post(string uri, Dictionary<string, object> param = null)
     {
-        byte[] response = null;
+        byte[] streamBytes = null;
 
-        NameValueCollection nameValueCollection = new NameValueCollection();
-
+        NameValueCollection values = new NameValueCollection();
+		ArrayList files = new ArrayList();
+				
         foreach (KeyValuePair<string, object> kvp in param)
         {
-            if (kvp.Value is File)
+            if (kvp.Value is FileStream)
             {
+	             UploadFile file = new UploadFile();
+	             file.Name = kvp.Key;
+	             file.Filename = kvp.Value.Name;
+	             file.ContentType = "application/octet-stream";
+	             file.Stream = kvp.Value;
+	             files.Add(file);
+	             
             }
             else
             {
                 string str = (String)kvp.Value;
-                nameValueCollection.Add(kvp.Key, str);
+                values.Add(kvp.Key, str);
             }
         }
-
-
-        using (WebClient client = new WebClient())
+		
+		var request = WebRequest.Create(uri);
+        request.Method = "POST";
+        var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x", NumberFormatInfo.InvariantInfo);
+        request.ContentType = "multipart/form-data; boundary=" + boundary;
+        boundary = "--" + boundary;
+        
+         
+        using (var requestStream = request.GetRequestStream())
         {
-            if (!client.IsBusy) // 요청 중이면, 실행하지 않는다
+
+            foreach (string name in values.Keys)
             {
-                client.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-                response = client.UploadValues(uri, nameValueCollection);
+                var buffer = Encoding.ASCII.GetBytes(boundary + Environment.NewLine);
+                requestStream.Write(buffer, 0, buffer.Length);
+                buffer = Encoding.ASCII.GetBytes(string.Format("Content-Disposition: form-data; name=\"{0}\"{1}{1}", name, Environment.NewLine));
+                requestStream.Write(buffer, 0, buffer.Length);
+                buffer = Encoding.UTF8.GetBytes(values[name] + Environment.NewLine);
+                requestStream.Write(buffer, 0, buffer.Length);
             }
+
+
+            foreach (var file in files)
+            {
+                var buffer = Encoding.ASCII.GetBytes(boundary + Environment.NewLine);
+                requestStream.Write(buffer, 0, buffer.Length);
+                buffer = Encoding.UTF8.GetBytes(string.Format("Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"{2}", file.Name, file.Filename, Environment.NewLine));
+                requestStream.Write(buffer, 0, buffer.Length);
+                buffer = Encoding.ASCII.GetBytes(string.Format("Content-Type: {0}{1}{1}", file.ContentType, Environment.NewLine));
+                requestStream.Write(buffer, 0, buffer.Length);
+                file.Stream.CopyTo(requestStream);
+                buffer = Encoding.ASCII.GetBytes(Environment.NewLine);
+                requestStream.Write(buffer, 0, buffer.Length);
+            }
+
+            var boundaryBuffer = Encoding.ASCII.GetBytes(boundary + "--");
+            requestStream.Write(boundaryBuffer, 0, boundaryBuffer.Length);
         }
-        string response_str = System.Text.Encoding.GetEncoding("utf-8").GetString(response);
-        return response_str;
+
+		using (var response = request.GetResponse())
+        using (var responseStream = response.GetResponseStream())
+        using (var stream = new MemoryStream())
+        {
+            responseStream.CopyTo(stream);
+            streamBytes = stream.ToArray();
+            string response_str = System.Text.Encoding.GetEncoding("utf-8").GetString(streamBytes);
+	        return response_str;
+        }
+        
+    
     }
 }
