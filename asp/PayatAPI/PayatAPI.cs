@@ -8,6 +8,8 @@ using System.Collections.Specialized;
 using System.Collections;
 using System.Net;
 using System.IO;
+using System.Text;
+using System.Globalization;
 
 public class UploadFile
 {
@@ -185,6 +187,14 @@ public partial class PayatAPI
         Dictionary<string, object> dic = new Dictionary<string, object>();
         dic.Add("client_id", this.client_id);
         dic.Add("client_secret", this.client_secret);
+        if (this.client_id.Length <= 0)
+        {
+            throw new Exception("client id가 부적절합니다.");
+        }
+        if (this.client_secret.Length <= 0)
+        {
+            throw new Exception("client secret이 부적절합니다.");
+        }
 
         string response_str = this.Post(mode + "/oauth/v1/authorization.json", dic);
 
@@ -193,10 +203,17 @@ public partial class PayatAPI
         JsonObject obj = parser.Parse(response_str);
         JsonObjectCollection json_list = (JsonObjectCollection)obj;
 
+        if (Convert.ToInt32(json_list["code"].GetValue().ToString()) == 200)
+        {
             JsonObject data = json_list["data"];
             JsonObjectCollection json_list_data = (JsonObjectCollection)data;
 
-            this.access_token = (String)json_list_data["access_token"].GetValue();
+            this.access_token = json_list_data["access_token"].GetValue().ToString();
+        }
+        else
+        {
+            throw new Exception(json_list["message"].GetValue().ToString());
+        }
 
     }
 
@@ -213,12 +230,13 @@ public partial class PayatAPI
         {
             if (kvp.Value is FileStream)
             {
-	             UploadFile file = new UploadFile();
-	             file.Name = kvp.Key;
-	             file.Filename = kvp.Value.Name;
-	             file.ContentType = "application/octet-stream";
-	             file.Stream = kvp.Value;
-	             files.Add(file);
+                FileStream fs = (FileStream) kvp.Value;
+	            UploadFile file = new UploadFile();
+	            file.Name = kvp.Key;
+                file.Filename = fs.Name;
+	            file.ContentType = "application/octet-stream";
+                file.Stream = fs;
+	            files.Add(file);
 	             
             }
             else
@@ -249,7 +267,7 @@ public partial class PayatAPI
             }
 
 
-            foreach (var file in files)
+            foreach (UploadFile file in files)
             {
                 var buffer = Encoding.ASCII.GetBytes(boundary + Environment.NewLine);
                 requestStream.Write(buffer, 0, buffer.Length);
