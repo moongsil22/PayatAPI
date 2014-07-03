@@ -2,8 +2,8 @@
   require_once("payatapi.php");
   
   
-  //개발서버로 연결
-  $payat = new PayAtAPI("test","05a671c66aefea124cc08b76ea6d30bb",true); //client_id,client_secret,is_dev
+  
+  $payat = new PayAtAPI("aegisep","7adb3bdb22db89f220549925e27e53853c5f20dc8976a06d4513016718b9da96"); //client_id,client_secret
   
   try {
 	  

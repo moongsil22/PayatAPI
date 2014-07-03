@@ -56,42 +56,12 @@ public class PayatAPI {
 	public PayatAPI(String ClientID, String ClientSecret){
 		this.ClientID = ClientID;
 		this.ClientSecret = ClientSecret;
-		setDeveloperMode(false);
+		this.accessToken = "";
+		this.scheme = "https";
+		this.host = "www.kkokjee.com";
+		this.port = 443;
 	}
 
-	/**
-	 * 클라이언트아이디와 시크릿으로 실서버 또는 개발서버에 접속하는 클래스를 생성
-	 * @param ClientID - 클라이언트 아이디
-	 * @param ClientSecret - 클라이언트 시크릿
-	 * @param DeveloperMode - 개발서버 접속여부 (true=개발서버, false=실서버)
-	 */
-	public PayatAPI(String ClientID, String ClientSecret, boolean DeveloperMode){
-		this.ClientID = ClientID;
-		this.ClientSecret = ClientSecret;
-		if(DeveloperMode){
-			setDeveloperMode(true);
-		}else{
-			setDeveloperMode(false);
-		}
-	}
-
-	/**
-	 * 개발서버와 실서버접속 변경
-	 * @param DeveloperMode - 개발서버 접속여부 (true=개발서버, false=실서버)
-	 */
-	public void setDeveloperMode(boolean DeveloperMode){
-		if(DeveloperMode){
-			this.accessToken = "";
-			this.scheme = "http";
-			this.host = "dev.kkokjee.com";
-			this.port = 9080;
-		}else{
-			this.accessToken = "";
-			this.scheme = "https";
-			this.host = "www.kkokjee.com";
-			this.port = 443;
-		}
-	}
 
 	/**
 	 * 요청값이 없는 리스트 조회등에 주로 사용

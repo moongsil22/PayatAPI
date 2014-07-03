@@ -10,25 +10,16 @@ import org.w3c.dom.Document;
 public class test {
  public static void main(String[] args) throws Exception {
 		
-  String client_id = ""; //클라이언트 아이디
-  String secret = ""; //클라이언트 시크릿
+  String client_id = "aegisep"; //클라이언트 아이디
+  String secret = "7adb3bdb22db89f220549925e27e53853c5f20dc8976a06d4513016718b9da96"; //클라이언트 시크릿
 		
-  PayatAPI payat = new PayatAPI(client_id,secret,true); //생성자 호출 (true이므로 개발자모드)
+  PayatAPI payat = new PayatAPI(client_id,secret); //생성자 호출 
   
-  
-  //**** json ****
-  JsonNode json_list = (JsonNode) payat.api ("/openapi/v1/partner/store/list.json"); 
-  System.out.println(json_list); 
-  payat.setDeveloperMode (false); //실서버 모드로 전환
+
   JsonNode real_json_list = (JsonNode) payat.api ("/openapi/v1/partner/store/list.json"); 
   System.out.println(real_json_list); 
   
   
-  //**** xml ****
-  payat.setDeveloperMode (true); //개발 모드로 전환
-  Document xml_list = (Document) payat.api ("/openapi/v1/partner/store/list.xml"); 
-  System.out.println(xml_list); 
-  payat.setDeveloperMode (false); //실서버 모드로 전환
   Document real_xml_list = (Document) payat.api ("/openapi/v1/partner/store/list.xml"); 
   System.out.println(real_xml_list); 
 

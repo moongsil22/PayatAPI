@@ -33,7 +33,6 @@ public partial class PayatAPI
     private string client_secret;
 
     private bool dev_mode;
-    private string dev_uri = "http://dev.kkokjee.com";
     private string real_uri = "https://www.kkokjee.com";
     private string mode;
 
@@ -48,40 +47,12 @@ public partial class PayatAPI
     {
         this.client_id = client_id;
         this.client_secret = client_secret;
-        setDeveloperMode(false);
+        this.access_token = "";
+        this.mode = this.real_uri;
     }
 
-    /// <summary>
-    /// 클라이언트아이디와 시크릿으로 실서버 또는 개발서버에 접속하는 클래스를 생성
-    /// </summary>
-    /// <param name="client_id">클라이언트 아이디</param>
-    /// <param name="client_secret">클라이언트 시크릿</param>
-    /// <param name="developer_mode">개발서버 접속여부 (true=개발서버, false=실서버)</param>
-    public PayatAPI(string client_id, string client_secret, bool developer_mode)
-    {
-        this.client_id = client_id;
-        this.client_secret = client_secret;
-        setDeveloperMode(developer_mode);
-    }
-
-    /// <summary>
-    /// 개발서버와 실서버접속 변경
-    /// </summary>
-    /// <param name="DeveloperMode">개발서버 접속여부 (true=개발서버, false=실서버)</param>
-    public void setDeveloperMode(bool DeveloperMode)
-    {
-        if (DeveloperMode)
-        {
-            this.access_token = "";
-            this.mode = this.dev_uri;
-        }
-        else
-        {
-            this.access_token = "";
-            this.mode = this.real_uri;
-        }
-    }
-
+    
+   
     /// <summary>
     /// 요청값이 없는 리스트 조회등에 주로 사용
     /// </summary>

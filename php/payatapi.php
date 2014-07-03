@@ -42,36 +42,20 @@
    
    
    class PayAtAPI {
-     	var $is_dev = false;
      	var $protocol = "http";
      	var $host = "dev.kkokjee.com";
      	var $access_token = "";
      	var $client_id = "";
      	var $client_secret = "";
      	
-     	function __construct($client_id,$client_secret,$is_dev = true) {
+     	function __construct($client_id,$client_secret) {
      	
-     		$this->is_dev = $is_dev;
-     		if (!$is_dev) {
-     			$this->protocol = "https";
-     			$this->host = "www.kkokjee.com";
-     		}
-     		
+     		$this->protocol = "https";
+     		$this->host = "www.kkokjee.com";
      		$this->client_id = $client_id;
      		$this->client_secret = $client_secret;
      	}
      	
-     	function set_sandbox_mode($is_dev) {
-     		$this->is_dev = $is_dev;
-     		$this->access_token = "";
-     		if (!$is_dev) {
-     			$this->protocol = "https";
-     			$this->host = "www.kkokjee.com";
-     		}else {
-     			$this->protocol = "http";
-     			$this->host = "dev.kkokjee.com";
-     		}
-     	}
 		
 		function get_access_token() {
 			if ($this->access_token != "") return true;
