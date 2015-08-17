@@ -7,7 +7,7 @@ import java.util.Map;
 import org.codehaus.jackson.JsonNode;
 import org.w3c.dom.Document;
 
-public class test {
+public class Test {
  public static void main(String[] args) throws Exception {
 		
   String client_id = "aegisep"; //클라이언트 아이디
