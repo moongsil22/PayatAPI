@@ -24,7 +24,6 @@ public class test {
   System.out.println(real_xml_list); 
 
 
-  payat.setDeveloperMode (true); //개발 모드로 전환
   Map<String,Object> param = new HashMap<String, Object>(); //파람선언
   param.put("store_screen_name", "111111"); //상점아이디
   param.put("item_name", "PayatReader"); //상품명
