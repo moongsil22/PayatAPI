@@ -186,7 +186,7 @@ public class PayatAPI {
 			    ContentBody cbFile = new FileBody((File) e.getValue(), "image/jpeg");
 			    mpEntity.addPart("item_image", cbFile);
 			}else{
-				mpEntity.addPart(e.getKey(),new StringBody(e.getValue().toString()));	
+				mpEntity.addPart(e.getKey(),new StringBody(e.getValue().toString(),Charset.forName("UTF-8")));	
 			}
 		}
 	    httppost.setEntity(mpEntity);
